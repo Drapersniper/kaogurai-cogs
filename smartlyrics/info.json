@@ -3,6 +3,7 @@
     "description": "Finds lyrics for your current song.",
     "install_msg": "Thanks for installing!",
     "name": "SmartLyrics",
+    "requirements": ["curl_cffi"],
     "short": "Finds lyrics for your current song.",
     "min_bot_version": "3.5.0"
 }
