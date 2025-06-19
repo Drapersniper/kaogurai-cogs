@@ -25,4 +25,4 @@ Please make an issue on this GitHub repository if you have any questions or feed
 | Radio        | v2.0.1  | Saves radio URLs for easy access.                                                                                                   |
 | Search       | v2.0.4  | Search the web from Discord.                                                                                                        |
 | SFX          | v7.1.1  | Plays sound effects, text-to-speech, and join/leave sounds. (originally made by [baiumbg](https://github.com/baiumbg/baiumbg-Cogs)) |
-| SmartLyrics  | v3.0.5  | Gets lyrics for the song you're currently listening to.                                                                             |
+| SmartLyrics  | v3.0.6 | Gets lyrics for the song you're currently listening to.                                                                             |

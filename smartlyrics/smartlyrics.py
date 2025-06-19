@@ -2,7 +2,7 @@ import asyncio
 import re
 from typing import Optional, Union
 
-import aiohttp
+from curl_cffi.requests import AsyncSession
 import discord
 import lavalink
 from redbot.core import commands
@@ -17,7 +17,7 @@ class SmartLyrics(commands.Cog):
     Gets lyrics for your current song.
     """
 
-    __version__ = "3.0.5"
+    __version__ = "3.0.6"
 
     def __init__(self, bot: Red):
         """
@@ -25,7 +25,7 @@ class SmartLyrics(commands.Cog):
         correct headers and setting the RegEx.
         """
         self.bot = bot
-        self.session = aiohttp.ClientSession(
+        self.session = AsyncSession(
             headers={
                 "X-Genius-iOS-Version": "7.1.0",
                 "X-Genius-Logged-Out": "true",
@@ -70,19 +70,19 @@ class SmartLyrics(commands.Cog):
             "q": filtered,
         }
 
-        async with self.session.get(
+        r = await self.session.get(
             "https://api.genius.com/search/multi", params=params
-        ) as r:
-            if r.status != 200:
-                return
+        )
+        if r.status_code != 200:
+            return
 
-            j = await r.json()
+        j = r.json()
 
-            tracks = j["response"]["sections"][1]["hits"]
-            if not tracks:
-                return
+        tracks = j["response"]["sections"][1]["hits"]
+        if not tracks:
+            return
 
-            return tracks[0]["result"]["id"]
+        return tracks[0]["result"]["id"]
 
     async def _get_lyrics(self, query: str) -> Optional[dict]:
         """
@@ -95,20 +95,20 @@ class SmartLyrics(commands.Cog):
         params = {
             "text_format": "plain,dom",
         }
-        async with self.session.get(
+        r = await self.session.get(
             "https://api.genius.com/songs/" + str(track_id),
             params=params,
-        ) as r:
-            if r.status != 200:
-                return
+        )
+        if r.status_code != 200:
+            return
 
-            j = await r.json()
+        j = r.json()
 
-            return {
-                "title": j["response"]["song"]["full_title"],
-                "artwork": j["response"]["song"]["song_art_image_url"],
-                "lyrics": j["response"]["song"]["lyrics"]["plain"],
-            }
+        return {
+            "title": j["response"]["song"]["full_title"],
+            "artwork": j["response"]["song"]["song_art_image_url"],
+            "lyrics": j["response"]["song"]["lyrics"]["plain"],
+        }
 
     def _get_user_status_song(
         self, user: Union[discord.Member, discord.User]
